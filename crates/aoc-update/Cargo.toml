@@ -1,0 +1,25 @@
+[package]
+name = "aoc-update"
+version = "1.0.0"
+description = "Basic Rust project template for async services and CLI applications."
+license = "MIT"
+authors = ["Kade Robertson <kade@kaderobertson.dev>"]
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.75"
+config-better = { version = "1.1.0", features = ["async-tokio"] }
+dotenvy = "0.15.7"
+envy = "0.4.2"
+html2md = "0.2.14"
+prettyplease = "0.2.15"
+proc-macro2 = "1.0.67"
+quote = "1.0.33"
+reqwest = { version = "0.11.20", features = ["cookies"] }
+scraper = "0.17.1"
+serde = { version = "1.0.188", features = ["derive"] }
+syn = "2.0.37"
+thiserror = "1.0.48"
+tokio = { version = "1.32.0", features = ["full"] }
+tracing = "0.1.37"
+tracing-subscriber = { version = "0.3.17", features = ["fmt", "env-filter", "json"] }

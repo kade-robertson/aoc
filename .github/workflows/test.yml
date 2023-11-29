@@ -1,0 +1,30 @@
+on:
+  pull_request:
+    branches: [master]
+
+env:
+  SCCACHE_GHA_ENABLED: true
+  RUSTC_WRAPPER: sccache
+
+name: test
+jobs:
+  test:
+    name: test (${{ matrix.year }})
+    strategy:
+      matrix:
+        year: [2022]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: toolchain
+        name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: clippy
+
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.3
+
+      - name: Test
+        run: cargo test --locked
