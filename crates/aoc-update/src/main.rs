@@ -51,12 +51,24 @@ async fn get_input(client: &reqwest::Client, year: u32, day: u8) -> anyhow::Resu
     Ok(input)
 }
 
-fn upper_first(s: &str) -> String {
-    let mut c = s.chars();
-    match c.next() {
-        None => String::new(),
-        Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
+// For any continous string of letters, make the first letter uppercase.
+fn title_case(s: &str) -> String {
+    let mut result = String::new();
+    let mut last_was_letter = false;
+    for c in s.chars() {
+        if c.is_alphabetic() {
+            if !last_was_letter {
+                result.push(c.to_ascii_uppercase());
+            } else {
+                result.push(c);
+            }
+            last_was_letter = true;
+        } else {
+            result.push(c);
+            last_was_letter = false;
+        }
     }
+    result
 }
 
 async fn update_main(year: u32) -> anyhow::Result<TokenStream> {
@@ -72,7 +84,7 @@ async fn update_main(year: u32) -> anyhow::Result<TokenStream> {
         let filename = path.file_name().to_string_lossy().to_string();
         if metadata.is_dir() && filename.starts_with("day") {
             considered.push(format_ident!("{}", filename));
-            considered_upper.push(format_ident!("{}", upper_first(&filename)));
+            considered_upper.push(format_ident!("{}", title_case(&filename)));
         }
     }
 

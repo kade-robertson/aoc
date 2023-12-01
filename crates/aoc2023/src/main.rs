@@ -3,10 +3,12 @@ use mimalloc::MiMalloc;
 static GLOBAL: MiMalloc = MiMalloc;
 use common::{BenchmarkCollection, Problem};
 mod day01;
+mod day01alt;
 use day01::*;
+use day01alt::*;
 fn main() {
     let args = std::env::args().collect::<Vec<_>>();
-    let problems: Vec<Box<dyn Problem>> = vec![Box::new(Day01)];
+    let problems: Vec<Box<dyn Problem>> = vec![Box::new(Day01), Box::new(Day01Alt)];
     if args.contains(&"bench".to_string()) {
         for problem in problems {
             let bench = problem.bench_part1();

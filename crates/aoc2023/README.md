@@ -1,6 +1,6 @@
 # Advent of Code 2023
 
-Generated on Fri, 01 Dec 2023 14:38:02 +0000
+Generated on Fri, 01 Dec 2023 18:38:19 +0000
 
 ## Specifications
 
@@ -12,5 +12,6 @@ Generated on Fri, 01 Dec 2023 14:38:02 +0000
 
 | Problem | Part 1 Time | Part 2 Time | Runs |
 | ------- | ----------- | ----------- | ---- |
-| Day 1: Trebuchet?! | 35.2µs ± 5.3µs | 187.4µs ± 44.6µs | 25 |
+| Day 1: Trebuchet?! | 45.4µs ± 5.5µs | 210.5µs ± 53.8µs | 25 |
+| Day 1: Trebuchet?! (Alt) | 32.3µs ± 2.6µs | 212.1µs ± 21.2µs | 25 |
 
