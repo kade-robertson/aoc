@@ -197,13 +197,14 @@ async fn main() -> anyhow::Result<()> {
 
         for t in tokens.items {
             match t {
-                syn::Item::Static(s) => {
-                    if s.ident != "PROBLEM_INPUT" {
+                syn::Item::Struct(mut s) => {
+                    if !s.ident.to_string().starts_with("Day") {
                         new_stream.extend(quote! { #s });
                     } else {
+                        s.attrs.clear();
                         new_stream.extend(quote! {
                             #comment_preamble
-                            static PROBLEM_INPUT: &str = include_str!("input.txt");
+                            #s
                         });
                     }
                 }
