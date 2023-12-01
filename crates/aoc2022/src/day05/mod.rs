@@ -165,7 +165,6 @@ use common::{Problem, Solution};
 /// the Elves know where they should stand to be ready to unload the final
 /// supplies. *After the rearrangement procedure completes, what crate ends up
 /// on top of each stack?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day05;
 
 #[derive(PartialEq)]
@@ -272,18 +271,21 @@ impl Day05 {
 }
 
 impl Problem for Day05 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         5u8
     }
     fn name(&self) -> &str {
         "Day 5: Supply Stacks"
     }
-    fn solve(&self) -> Solution {
-        let crane_game = self.parse(PROBLEM_INPUT, false).unwrap();
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        let crane_game = self.parse(input, false).unwrap();
         Solution::Str(crane_game.get_top_crates().unwrap_or_else(|_| "failed".into()))
     }
-    fn solve_part2(&self) -> Solution {
-        let crane_game = self.parse(PROBLEM_INPUT, true).unwrap();
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        let crane_game = self.parse(input, true).unwrap();
         Solution::Str(crane_game.get_top_crates().unwrap_or_else(|_| "failed".into()))
     }
 }

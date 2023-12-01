@@ -156,7 +156,6 @@ use common::{Problem, Solution};
 /// Find the smallest directory that, if deleted, would free up enough space on
 /// the filesystem to run the update. *What is the total size of that
 /// directory?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day07;
 
 struct Directory {
@@ -324,16 +323,19 @@ impl Day07 {
 }
 
 impl Problem for Day07 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         7u8
     }
     fn name(&self) -> &str {
         "Day 7: No Space Left On Device"
     }
-    fn solve(&self) -> Solution {
-        Solution::U64(self.solve_actual(&self.parse(PROBLEM_INPUT)))
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        Solution::U64(self.solve_actual(&self.parse(input)))
     }
-    fn solve_part2(&self) -> Solution {
-        Solution::U64(self.solve_actual_part2(&self.parse(PROBLEM_INPUT)))
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        Solution::U64(self.solve_actual_part2(&self.parse(input)))
     }
 }

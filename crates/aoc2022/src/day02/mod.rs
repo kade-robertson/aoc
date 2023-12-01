@@ -81,7 +81,6 @@ use common::{Problem, Solution};
 ///
 /// Following the Elf's instructions for the second column, *what would your
 /// total score be if everything goes exactly according to your strategy guide?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day02;
 #[derive(Debug, PartialEq, Eq)]
 enum RPSMove {
@@ -159,16 +158,19 @@ impl Day02 {
     }
 }
 impl Problem for Day02 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         2
     }
     fn name(&self) -> &str {
         "Day 2: Rock Paper Scissors"
     }
-    fn solve(&self) -> Solution {
-        Solution::U16(self.total_points(&self.parse(PROBLEM_INPUT)))
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        Solution::U16(self.total_points(&self.parse(input)))
     }
-    fn solve_part2(&self) -> Solution {
-        Solution::U16(self.total_points(&self.parse_part2(PROBLEM_INPUT)))
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        Solution::U16(self.total_points(&self.parse_part2(input)))
     }
 }

@@ -106,7 +106,6 @@ use common::{Problem, Solution};
 ///
 /// Find the item type that corresponds to the badges of each three-Elf group.
 /// *What is the sum of the priorities of those item types?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day03;
 
 struct Rucksack {
@@ -171,16 +170,19 @@ impl Day03 {
 }
 
 impl Problem for Day03 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         3u8
     }
     fn name(&self) -> &str {
         "Day 3: Rucksack Reorganization"
     }
-    fn solve(&self) -> Solution {
-        Solution::U32(self.solve_actual(&self.parse(PROBLEM_INPUT)))
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        Solution::U32(self.solve_actual(&self.parse(input)))
     }
-    fn solve_part2(&self) -> Solution {
-        Solution::U32(self.solve_actual_part2(&self.parse(PROBLEM_INPUT)))
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        Solution::U32(self.solve_actual_part2(&self.parse(input)))
     }
 }

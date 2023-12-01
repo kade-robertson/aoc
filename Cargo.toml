@@ -4,7 +4,6 @@ members = ["crates/aoc-update", "crates/common", "crates/aoc2022"]
 
 [profile.release]
 opt-level = 3
-strip = true
 codegen-units = 1
 lto = true
 

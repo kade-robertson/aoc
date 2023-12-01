@@ -86,7 +86,6 @@ use common::{Problem, Solution};
 ///
 /// Find the top three Elves carrying the most Calories. *How many Calories are
 /// those Elves carrying in total?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day01;
 fn parse(data: &str) -> Vec<u32> {
     let mut all_callories = Vec::new();
@@ -102,18 +101,21 @@ fn parse(data: &str) -> Vec<u32> {
     all_callories
 }
 impl Problem for Day01 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         1
     }
     fn name(&self) -> &str {
         "Day 1: Calorie Counting"
     }
-    fn solve(&self) -> Solution {
-        let counts = parse(PROBLEM_INPUT);
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        let counts = parse(input);
         Solution::U32(*counts.iter().max().unwrap())
     }
-    fn solve_part2(&self) -> Solution {
-        let mut counts = parse(PROBLEM_INPUT);
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        let mut counts = parse(input);
         counts.sort();
         Solution::U32(counts.iter().rev().take(3).sum())
     }

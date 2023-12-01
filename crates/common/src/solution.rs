@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Solution {
     U64(u64),
     I64(i64),
@@ -9,6 +10,9 @@ pub enum Solution {
     I16(i16),
     USize(usize),
     Str(String),
+    Todo,
+    None,
+    Error,
 }
 
 impl Display for Solution {
@@ -22,6 +26,9 @@ impl Display for Solution {
             Solution::I16(val) => write!(f, "{}", val),
             Solution::USize(val) => write!(f, "{}", val),
             Solution::Str(val) => write!(f, "{}", val),
+            Solution::Todo => write!(f, "TODO!"),
+            Solution::None => write!(f, "None!"),
+            Solution::Error => write!(f, "Error!"),
         }
     }
 }
@@ -71,5 +78,23 @@ impl From<usize> for Solution {
 impl From<&str> for Solution {
     fn from(val: &str) -> Self {
         Solution::Str(val.to_string())
+    }
+}
+
+impl<T: Into<Solution>> From<Option<T>> for Solution {
+    fn from(val: Option<T>) -> Self {
+        match val {
+            Some(v) => v.into(),
+            None => Solution::None,
+        }
+    }
+}
+
+impl<T: Into<Solution>, E> From<Result<T, E>> for Solution {
+    fn from(val: Result<T, E>) -> Self {
+        match val {
+            Ok(v) => v.into(),
+            Err(_) => Solution::Error,
+        }
     }
 }

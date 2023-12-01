@@ -738,7 +738,6 @@ use common::{Problem, Solution};
 ///
 /// Simulate your complete series of motions on a larger rope with ten knots.
 /// *How many positions does the tail of the rope visit at least once?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day09;
 
 struct KnotSimulator {
@@ -812,16 +811,19 @@ impl Day09 {
 }
 
 impl Problem for Day09 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         9u8
     }
     fn name(&self) -> &str {
         "Day 9: Rope Bridge"
     }
-    fn solve(&self) -> Solution {
-        Solution::USize(self.solve_actual(&self.parse(PROBLEM_INPUT, 2)))
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        Solution::USize(self.solve_actual(&self.parse(input, 2)))
     }
-    fn solve_part2(&self) -> Solution {
-        Solution::USize(self.solve_actual(&self.parse(PROBLEM_INPUT, 10)))
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        Solution::USize(self.solve_actual(&self.parse(input, 10)))
     }
 }

@@ -106,7 +106,6 @@ use common::{Problem, Solution};
 ///
 /// Consider each tree on your map. *What is the highest scenic score possible
 /// for any tree?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day08;
 
 mod square_grid;
@@ -256,16 +255,19 @@ impl Day08 {
 }
 
 impl Problem for Day08 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         8u8
     }
     fn name(&self) -> &str {
         "Day 8: Treetop Tree House"
     }
-    fn solve(&self) -> Solution {
-        Solution::U32(self.solve_actual(&self.parse(PROBLEM_INPUT)))
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        Solution::U32(self.solve_actual(&self.parse(input)))
     }
-    fn solve_part2(&self) -> Solution {
-        Solution::U32(self.solve_actual_part2(&self.parse(PROBLEM_INPUT)))
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        Solution::U32(self.solve_actual_part2(&self.parse(input)))
     }
 }

@@ -35,7 +35,7 @@ fn main() {
     ];
     if args.contains(&"bench".to_string()) {
         for problem in problems {
-            let bench = problem.bench();
+            let bench = problem.bench_part1();
             println!(
                 "{} - Part 1: {:?} ({} runs)",
                 problem.name(),
@@ -53,7 +53,7 @@ fn main() {
     } else if args.contains(&"bench-md".to_string()) {
         let mut collection = BenchmarkCollection::new(format!("Advent of Code {}", 2022u32));
         for problem in problems {
-            let bench = problem.bench();
+            let bench = problem.bench_part1();
             collection.add(bench);
             let bench = problem.bench_part2();
             collection.add(bench);
@@ -61,7 +61,7 @@ fn main() {
         println!("{}", collection.to_markdown());
     } else {
         for problem in problems {
-            println!("{} - Part 1: {}", problem.name(), problem.solve());
+            println!("{} - Part 1: {}", problem.name(), problem.solve_part1());
             println!("{} - Part 2: {}", problem.name(), problem.solve_part2());
         }
     }

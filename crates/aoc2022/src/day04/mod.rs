@@ -85,7 +85,6 @@ use common::{Problem, Solution};
 /// So, in this example, the number of overlapping assignment pairs is `*4*`.
 ///
 /// *In how many assignment pairs do the ranges overlap?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day04;
 
 struct CleaningPair {
@@ -154,16 +153,19 @@ impl Day04 {
 }
 
 impl Problem for Day04 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         4u8
     }
     fn name(&self) -> &str {
         "Day 4: Camp Cleanup"
     }
-    fn solve(&self) -> Solution {
-        Solution::U16(self.solve_actual(&self.parse(PROBLEM_INPUT)))
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        Solution::U16(self.solve_actual(&self.parse(input)))
     }
-    fn solve_part2(&self) -> Solution {
-        Solution::U16(self.solve_actual_part2(&self.parse(PROBLEM_INPUT)))
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        Solution::U16(self.solve_actual_part2(&self.parse(input)))
     }
 }

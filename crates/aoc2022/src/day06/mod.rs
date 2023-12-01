@@ -80,7 +80,6 @@ use common::{Problem, Solution};
 ///
 /// *How many characters need to be processed before the first start-of-message
 /// marker is detected?*
-static PROBLEM_INPUT: &str = include_str!("input.txt");
 pub struct Day06;
 
 impl Day06 {
@@ -105,16 +104,19 @@ impl Day06 {
 }
 
 impl Problem for Day06 {
+    fn problem_input(&self) -> &'static str {
+        include_str!("input.txt")
+    }
     fn day(&self) -> u8 {
         6u8
     }
     fn name(&self) -> &str {
         "Day 6: Tuning Trouble"
     }
-    fn solve(&self) -> Solution {
-        Solution::U64(self.solve(PROBLEM_INPUT, 4))
+    fn solve_part1_with(&self, input: &str) -> Solution {
+        Solution::U64(self.solve(input, 4))
     }
-    fn solve_part2(&self) -> Solution {
-        Solution::U64(self.solve(PROBLEM_INPUT, 14))
+    fn solve_part2_with(&self, input: &str) -> Solution {
+        Solution::U64(self.solve(input, 14))
     }
 }

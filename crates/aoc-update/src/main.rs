@@ -99,7 +99,7 @@ async fn update_main(year: u32) -> anyhow::Result<TokenStream> {
 
             if args.contains(&"bench".to_string()) {
                 for problem in problems {
-                    let bench = problem.bench();
+                    let bench = problem.bench_part1();
                     println!("{} - Part 1: {:?} ({} runs)", problem.name(), bench.average(), bench.results.len());
 
                     let bench = problem.bench_part2();
@@ -108,7 +108,7 @@ async fn update_main(year: u32) -> anyhow::Result<TokenStream> {
             } else if args.contains(&"bench-md".to_string()) {
                 let mut collection = BenchmarkCollection::new(format!("Advent of Code {}", #year));
                 for problem in problems {
-                    let bench = problem.bench();
+                    let bench = problem.bench_part1();
                     collection.add(bench);
 
                     let bench = problem.bench_part2();
@@ -117,7 +117,7 @@ async fn update_main(year: u32) -> anyhow::Result<TokenStream> {
                 println!("{}", collection.to_markdown());
             } else {
                 for problem in problems {
-                    println!("{} - Part 1: {}", problem.name(), problem.solve());
+                    println!("{} - Part 1: {}", problem.name(), problem.solve_part1());
                     println!("{} - Part 2: {}", problem.name(), problem.solve_part2());
                 }
             }
@@ -226,12 +226,13 @@ async fn main() -> anyhow::Result<()> {
         use common::{Problem, Solution};
 
         #comment_preamble
-
-        static PROBLEM_INPUT: &str = include_str!("input.txt");
-
         pub struct #problem_ident;
 
         impl Problem for #problem_ident {
+            fn problem_input(&self) -> &'static str {
+                include_str!("input.txt")
+            }
+
             fn day(&self) -> u8 {
                #day
             }
@@ -240,12 +241,39 @@ async fn main() -> anyhow::Result<()> {
                 #title
             }
 
-            fn solve(&self) -> Solution {
-                todo!()
+            fn solve_part1_with(&self, input: &str) -> Solution {
+                Solution::Todo
             }
 
-            fn solve_part2(&self) -> Solution {
-                todo!()
+            fn solve_part2_with(&self, input: &str) -> Solution {
+                Solution::Todo
+            }
+        }
+
+        #[cfg(test)]
+        mod tests {
+            use super::*;
+
+            #[test]
+            fn test_part1_example() {
+                assert_eq!(1, 1);
+            }
+
+            #[test]
+            fn test_part1_real_input() {
+                let problem = #problem_ident {};
+                assert_eq!(problem.solve_part1(), Solution::Todo);
+            }
+
+            #[test]
+            fn test_part2_example() {
+                assert_eq!(1, 1);
+            }
+
+            #[test]
+            fn test_part2_real_input() {
+                let problem = #problem_ident {};
+                assert_eq!(problem.solve_part2(), Solution::Todo);
             }
         }
     };
