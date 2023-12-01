@@ -1,0 +1,9 @@
+[package]
+name = "aoc2023"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.75"
+common = { path = "../common" }
+mimalloc = "0.1.39"
