@@ -7,6 +7,10 @@ opt-level = 3
 codegen-units = 1
 lto = true
 
+[profile.release-profile]
+inherits = "release"
+debug = true
+
 [profile.release-small]
 inherits = "release"
 opt-level = "z"
