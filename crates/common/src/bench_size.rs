@@ -1,1 +1,1 @@
-pub const BENCH_COUNT: usize = 25;
+pub const BENCH_COUNT: usize = 500;
