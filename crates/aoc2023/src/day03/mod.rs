@@ -48,45 +48,97 @@ use common::{Problem, Solution};
 /// all of the part numbers in the engine schematic?*
 pub struct Day03;
 
-struct GondolaEngine {
-    number_spans: Vec<(usize, usize, usize, u32)>,
-    symbol_positions: Vec<(usize, usize, char)>,
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Part {
+    None,
+    Single(u32),
+    Double(u32, u32),
+    Triple(u32, u32, u32),
+    Quadruple(u32, u32, u32, u32),
 }
 
-impl Day03 {
-    fn parse_engine(&self, input: &str) -> GondolaEngine {
-        let mut number_spans: Vec<(usize, usize, usize, u32)> = Vec::with_capacity(input.len());
-        let mut symbol_positions: Vec<(usize, usize, char)> = Vec::with_capacity(input.len());
+impl Part {
+    fn total(&self) -> u32 {
+        match self {
+            Part::None => 0,
+            Part::Single(a) => *a,
+            Part::Double(a, b) => *a + *b,
+            Part::Triple(a, b, c) => *a + *b + *c,
+            Part::Quadruple(a, b, c, d) => *a + *b + *c + *d,
+        }
+    }
 
+    fn ratio(&self) -> u32 {
+        match self {
+            Part::Double(a, b) => *a * *b,
+            _ => 0,
+        }
+    }
+
+    fn add(&mut self, value: u32) {
+        *self = match self {
+            Part::None => Part::Single(value),
+            Part::Single(a) => Part::Double(*a, value),
+            Part::Double(a, b) => Part::Triple(*a, *b, value),
+            Part::Triple(a, b, c) => Part::Quadruple(*a, *b, *c, value),
+            Part::Quadruple(_, _, _, _) => {
+                panic!("Too many numbers in one spot");
+            }
+        }
+    }
+}
+
+struct PartSpan(isize, isize, isize, u32);
+
+// Fortunately, our input and enum size are small enough we can fit this entire
+// map on the stack so we can avoid heap allocations.
+struct GondolaEngine {
+    parts_map: [[Part; 150]; 150],
+}
+
+impl GondolaEngine {
+    fn new() -> Self {
+        Self { parts_map: [[Part::None; 150]; 150] }
+    }
+
+    fn add_part(&mut self, span: &PartSpan) {
+        for x in span.0 - 1..=span.0 + 1 {
+            for y in span.1 - 1..=span.2 + 1 {
+                if x < 0 || y < 0 || x >= 150 || y >= 150 {
+                    continue;
+                }
+                self.parts_map[x as usize][y as usize].add(span.3)
+            }
+        }
+    }
+
+    fn parse(&mut self, input: &str) {
         for (idx, row) in input.lines().enumerate().map(|(i, l)| (i, l.trim())) {
             let mut span_in_use = false;
-            let mut current_span = (idx, 0, 0, 0);
+            let mut current_span = PartSpan(idx as isize, 0, 0, 0);
             for (idy, ch) in row.chars().enumerate() {
                 if let Some(d) = ch.to_digit(10) {
                     if !span_in_use {
-                        current_span.1 = idy;
+                        current_span.1 = idy as isize;
                     }
                     span_in_use = true;
-                    current_span.2 = idy;
+                    current_span.2 = idy as isize;
                     current_span.3 = (current_span.3 * 10) + d;
-                } else {
-                    if span_in_use {
-                        number_spans.push(current_span);
-                        current_span = (idx, 0, 0, 0);
-                        span_in_use = false;
-                    }
-
-                    if ch != '.' {
-                        symbol_positions.push((idx, idy, ch));
-                    }
+                } else if span_in_use {
+                    self.add_part(&current_span);
+                    current_span = PartSpan(idx as isize, 0, 0, 0);
+                    span_in_use = false;
                 }
             }
+
             if span_in_use {
-                number_spans.push(current_span);
+                self.add_part(&current_span);
             }
         }
+    }
 
-        GondolaEngine { number_spans, symbol_positions }
+    fn part_at(&self, x: usize, y: usize) -> Part {
+        self.parts_map[x][y]
     }
 }
 
@@ -101,18 +153,14 @@ impl Problem for Day03 {
         "Day 3: Gear Ratios"
     }
     fn solve_part1_with(&self, input: &str) -> Solution {
-        let engine = self.parse_engine(input);
+        let mut engine = GondolaEngine::new();
+        engine.parse(input);
 
         let mut total = 0;
-
-        for (nx, ny, nz, value) in engine.number_spans {
-            for (sx, sy, _) in &engine.symbol_positions {
-                let within_row =
-                    *sx as isize >= (nx as isize - 1) && *sx as isize <= (nx as isize + 1);
-                let within_col =
-                    *sy as isize >= (ny as isize - 1) && *sy as isize <= (nz as isize + 1);
-                if within_row && within_col {
-                    total += value;
+        for (idx, row) in input.lines().enumerate().map(|(i, l)| (i, l.trim())) {
+            for (idy, ch) in row.chars().enumerate() {
+                if !ch.is_ascii_digit() && ch != '.' {
+                    total += engine.part_at(idx, idy).total();
                 }
             }
         }
@@ -120,29 +168,18 @@ impl Problem for Day03 {
         Solution::U32(total)
     }
     fn solve_part2_with(&self, input: &str) -> Solution {
-        let engine = self.parse_engine(input);
+        let mut engine = GondolaEngine::new();
+        engine.parse(input);
 
         let mut total = 0;
 
-        for (sx, sy, ch) in engine.symbol_positions {
-            if ch != '*' {
-                continue;
-            }
-            let mut num_count = 0;
-            let mut gear_ratio = 1;
-            for (nx, ny, nz, value) in &engine.number_spans {
-                let within_row =
-                    sx as isize >= (*nx as isize - 1) && sx as isize <= (*nx as isize + 1);
-                let within_col =
-                    sy as isize >= (*ny as isize - 1) && sy as isize <= (*nz as isize + 1);
-                if within_row && within_col {
-                    gear_ratio *= value;
-                    num_count += 1;
+        for (idx, row) in input.lines().enumerate().map(|(i, l)| (i, l.trim())) {
+            for (idy, ch) in row.chars().enumerate() {
+                if ch != '*' {
+                    continue;
                 }
-            }
 
-            if num_count >= 2 {
-                total += gear_ratio;
+                total += engine.part_at(idx, idy).ratio();
             }
         }
 
