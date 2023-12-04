@@ -1,6 +1,12 @@
 [workspace]
 resolver = "2"
-members = ["crates/aoc-update", "crates/common", "crates/aoc2022", "crates/aoc2023"]
+members = [
+    "crates/aoc-update",
+    "crates/common",
+    "crates/aoc2015",
+    "crates/aoc2022",
+    "crates/aoc2023"
+]
 
 [profile.release]
 opt-level = 3

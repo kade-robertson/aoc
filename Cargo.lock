@@ -67,6 +67,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc2015"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "common",
+ "mimalloc",
+]
+
+[[package]]
 name = "aoc2022"
 version = "0.1.0"
 dependencies = [
