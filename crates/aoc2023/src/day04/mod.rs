@@ -1,5 +1,5 @@
 use common::{Problem, Solution};
-use std::collections::{HashSet, VecDeque};
+use std::collections::HashSet;
 /// \--- Day 4: Scratchcards ---
 /// ----------
 ///
@@ -174,32 +174,24 @@ impl Problem for Day04 {
             }
         }
 
-        let mut remaining_cards = scratch_cards
-            .iter()
-            .enumerate()
-            .filter(|(_, c)| c.1 > 0)
-            .map(|(i, c)| (i, c.0))
-            .collect::<VecDeque<_>>();
-        let mut required_duplicates = [0u32; 255];
+        let card_count = scratch_cards.iter().take_while(|c| c.1 > 0).count();
+        let mut total = 0;
 
-        while let Some((index, matches)) = remaining_cards.pop_front() {
-            if let Some(dupes) = required_duplicates.get_mut(index) {
-                if *dupes > 0 {
-                    for _ in 0..*dupes {
-                        remaining_cards.push_back((index, matches));
-                    }
-                    scratch_cards[index].1 += *dupes;
-                    *dupes = 0;
-                }
+        for i in 0..card_count {
+            let (matches, remaining) = scratch_cards[i];
+            if remaining == 0 {
+                continue;
             }
             if matches > 0 {
                 for needed_dupes in 1..=matches {
-                    required_duplicates[index + needed_dupes as usize] += 1;
+                    scratch_cards[i + needed_dupes as usize].1 += remaining;
                 }
             }
+            total += remaining;
+            scratch_cards[i].1 -= remaining;
         }
 
-        Solution::U32(scratch_cards.iter().map(|c| c.1).sum::<u32>())
+        Solution::U32(total)
     }
 }
 #[cfg(test)]
