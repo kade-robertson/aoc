@@ -64,7 +64,7 @@ impl Problem for Day02 {
                 let face_b = w * h;
                 let face_c = h * l;
                 let area = 2 * face_a + 2 * face_b + 2 * face_c;
-                let slack = [face_a, face_b, face_c].into_iter().min().unwrap_or(0);
+                let slack = face_a.min(face_b).min(face_c);
                 total += area + slack;
             }
         }
@@ -78,7 +78,7 @@ impl Problem for Day02 {
                 let perim_a = 2 * (l + w);
                 let perim_b = 2 * (w + h);
                 let perim_c = 2 * (h + l);
-                total += [perim_a, perim_b, perim_c].into_iter().min().unwrap_or(0) + (l * w * h);
+                total += perim_a.min(perim_b).min(perim_c) + (l * w * h);
             }
         }
         Solution::U32(total)

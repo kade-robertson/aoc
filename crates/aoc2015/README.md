@@ -1,6 +1,6 @@
 # Advent of Code 2015
 
-Generated on Mon, 04 Dec 2023 21:43:56 +0000
+Generated on Mon, 04 Dec 2023 21:51:24 +0000
 
 ## Specifications
 
@@ -12,7 +12,7 @@ Generated on Mon, 04 Dec 2023 21:43:56 +0000
 
 | Problem | Part 1 Time | Part 2 Time | Runs |
 | ------- | ----------- | ----------- | ---- |
-| Day 1: Not Quite Lisp | 1.5µs ± 14ns | 1.3µs ± 330ns | 500 |
-| Day 2: I Was Told There Would Be No Math | 32.8µs ± 9.3µs | 29µs ± 10.1µs | 500 |
-| Day 3: Perfectly Spherical Houses in a Vacuum | 16µs ± 2.7µs | 18.8µs ± 2.3µs | 500 |
+| Day 1: Not Quite Lisp | 2.9µs ± 630ns | 2.3µs ± 270ns | 500 |
+| Day 2: I Was Told There Would Be No Math | 23.5µs ± 7.3µs | 19.9µs ± 1.2µs | 500 |
+| Day 3: Perfectly Spherical Houses in a Vacuum | 16.2µs ± 6.6µs | 18.7µs ± 2µs | 500 |
 
