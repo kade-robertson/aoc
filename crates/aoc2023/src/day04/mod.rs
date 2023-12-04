@@ -1,5 +1,4 @@
 use common::{Problem, Solution};
-use std::collections::HashSet;
 /// \--- Day 4: Scratchcards ---
 /// ----------
 ///
@@ -120,6 +119,31 @@ use std::collections::HashSet;
 /// scratchcards are won. Including the original set of scratchcards, *how many
 /// total scratchcards do you end up with?*
 pub struct Day04;
+
+fn card_iter(input: &str) -> impl Iterator<Item = (usize, u32)> + '_ {
+    input
+        .lines()
+        .enumerate()
+        .map(|(index, line)| (index, line.trim()))
+        .filter_map(|(index, line)| line.split_once(": ").map(|(_, numbers)| (index, numbers)))
+        .filter_map(|(index, numbers)| {
+            numbers
+                .split_once(" | ")
+                .map(|(winning_numbers, my_numbers)| (index, winning_numbers, my_numbers))
+        })
+        .map(|(index, winning_numbers, my_numbers)| {
+            let my_number_set = my_numbers
+                .split_whitespace()
+                .filter_map(|n| n.parse::<u32>().ok())
+                .fold(0u128, |acc, n| acc | 1u128 << n);
+            let winning_numbers_set = winning_numbers
+                .split_whitespace()
+                .filter_map(|n| n.parse::<u32>().ok())
+                .fold(0u128, |acc, n| acc | 1u128 << n);
+            (index, (my_number_set & winning_numbers_set).count_ones())
+        })
+}
+
 impl Problem for Day04 {
     fn problem_input(&self) -> &'static str {
         include_str!("input.txt")
@@ -133,22 +157,9 @@ impl Problem for Day04 {
     fn solve_part1_with(&self, input: &str) -> Solution {
         let mut total = 0;
 
-        for line in input.lines().map(|l| l.trim()) {
-            if let Some((_, numbers)) = line.split_once(": ") {
-                if let Some((winning_numbers, my_numbers)) = numbers.split_once(" | ") {
-                    let my_number_set = my_numbers
-                        .split_whitespace()
-                        .filter_map(|n| n.parse::<u32>().ok())
-                        .collect::<HashSet<_>>();
-                    let winning_numbers_set = winning_numbers
-                        .split_whitespace()
-                        .filter_map(|n| n.parse::<u32>().ok())
-                        .collect::<HashSet<_>>();
-                    let matches = my_number_set.intersection(&winning_numbers_set).count();
-                    if matches > 0 {
-                        total += 2u32.pow(matches as u32 - 1);
-                    }
-                }
+        for (_, matches) in card_iter(input) {
+            if matches > 0 {
+                total += 2u32.pow(matches - 1);
             }
         }
 
@@ -157,21 +168,8 @@ impl Problem for Day04 {
     fn solve_part2_with(&self, input: &str) -> Solution {
         let mut scratch_cards = [(0u32, 0u32); 255];
 
-        for (index, line) in input.lines().map(|l| l.trim()).enumerate() {
-            if let Some((_, numbers)) = line.split_once(": ") {
-                if let Some((winning_numbers, my_numbers)) = numbers.split_once(" | ") {
-                    let my_number_set = my_numbers
-                        .split_whitespace()
-                        .filter_map(|n| n.parse::<u32>().ok())
-                        .collect::<HashSet<_>>();
-                    let winning_numbers_set = winning_numbers
-                        .split_whitespace()
-                        .filter_map(|n| n.parse::<u32>().ok())
-                        .collect::<HashSet<_>>();
-                    let matches = my_number_set.intersection(&winning_numbers_set).count();
-                    scratch_cards[index] = (matches as u32, 1);
-                }
-            }
+        for (index, matches) in card_iter(input) {
+            scratch_cards[index] = (matches, 1);
         }
 
         let card_count = scratch_cards.iter().take_while(|c| c.1 > 0).count();
