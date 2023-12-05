@@ -1,7 +1,6 @@
 use std::str::FromStr;
 
 use common::{Problem, Solution};
-use rayon::iter::{IntoParallelIterator, IntoParallelRefIterator, ParallelIterator};
 /// \--- Day 5: If You Give A Seed A Fertilizer ---
 /// ----------
 ///
@@ -172,6 +171,14 @@ impl Range {
             None
         }
     }
+
+    fn map_inverse(&self, dest: u64) -> Option<u64> {
+        if dest >= self.dest && dest < self.dest + self.length {
+            Some(self.src + (dest - self.dest))
+        } else {
+            None
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -235,13 +242,20 @@ impl Almanac {
     }
 
     fn lowest_location_range(&self) -> u64 {
-        self.seed_ranges
-            .par_iter()
-            .map(|&(s, e)| {
-                (s..=e).into_par_iter().map(|s| self.map_seed(s)).min().unwrap_or(u64::MAX)
+        self.mappings
+            .iter()
+            .enumerate()
+            .flat_map(|(tier, ranges)| {
+                ranges.iter().filter_map(move |r| {
+                    Some(self.mappings.iter().take(tier + 1).rev().fold(r.dest, |seed, group| {
+                        group.iter().find_map(|g| g.map_inverse(seed)).unwrap_or(seed)
+                    }))
+                    .filter(|seed| self.seed_ranges.iter().any(|&(s, e)| s <= *seed && e >= *seed))
+                })
             })
+            .map(|a| self.map_seed(a))
             .min()
-            .unwrap_or(0)
+            .unwrap_or(u64::MAX)
     }
 }
 
