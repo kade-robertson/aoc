@@ -91,6 +91,7 @@ dependencies = [
  "anyhow",
  "common",
  "mimalloc",
+ "rayon",
 ]
 
 [[package]]

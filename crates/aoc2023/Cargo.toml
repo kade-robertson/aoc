@@ -7,3 +7,4 @@ edition = "2021"
 anyhow = "1.0.75"
 common = { path = "../common" }
 mimalloc = "0.1.39"
+rayon = "1.8.0"

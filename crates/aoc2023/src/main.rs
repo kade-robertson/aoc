@@ -7,11 +7,13 @@ mod day01alt;
 mod day02;
 mod day03;
 mod day04;
+mod day05;
 use day01::*;
 use day01alt::*;
 use day02::*;
 use day03::*;
 use day04::*;
+use day05::*;
 fn main() {
     let args = std::env::args().collect::<Vec<_>>();
     let problems: Vec<Box<dyn Problem>> = vec![
@@ -20,6 +22,7 @@ fn main() {
         Box::new(Day02),
         Box::new(Day03),
         Box::new(Day04),
+        Box::new(Day05),
     ];
     if args.contains(&"bench".to_string()) {
         for problem in problems {
