@@ -155,19 +155,19 @@ pub struct Day05;
 
 #[derive(Debug)]
 struct Range {
-    dest_start: u64,
-    src_start: u64,
+    dest: u64,
+    src: u64,
     length: u64,
 }
 
 impl Range {
     fn contains(&self, src: u64) -> bool {
-        src >= self.src_start && src < self.src_start + self.length
+        src >= self.src && src < self.src + self.length
     }
 
     fn map(&self, src: u64) -> Option<u64> {
         if self.contains(src) {
-            Some(self.dest_start + (src - self.src_start))
+            Some(self.dest + (src - self.src))
         } else {
             None
         }
@@ -178,32 +178,7 @@ impl Range {
 struct Almanac {
     seeds: Vec<u64>,
     seed_ranges: Vec<(u64, u64)>,
-    seed_to_soil: Vec<Range>,
-    soil_to_fertilizer: Vec<Range>,
-    fertilizer_to_water: Vec<Range>,
-    water_to_light: Vec<Range>,
-    light_to_temperature: Vec<Range>,
-    temperature_to_humidity: Vec<Range>,
-    humidity_to_location: Vec<Range>,
-}
-
-macro_rules! read_until_empty {
-    ($lines:ident, $name:ident) => {
-        let mut $name = Vec::new();
-        while let Some(line) = $lines.next() {
-            if line.trim().is_empty() {
-                break;
-            }
-
-            let mut parts = line.split(' ').filter_map(|s| s.parse::<u64>().ok()).take(3);
-            if let (Some(dest_start), Some(src_start), Some(length)) =
-                (parts.next(), parts.next(), parts.next())
-            {
-                $name.push(Range { dest_start, src_start, length });
-            }
-        }
-        $lines.next(); // blank
-    };
+    mappings: Vec<Vec<Range>>,
 }
 
 impl FromStr for Almanac {
@@ -226,43 +201,33 @@ impl FromStr for Almanac {
         lines.next(); // blank
         lines.next(); // title
 
-        read_until_empty!(lines, seed_to_soil);
-        read_until_empty!(lines, soil_to_fertilizer);
-        read_until_empty!(lines, fertilizer_to_water);
-        read_until_empty!(lines, water_to_light);
-        read_until_empty!(lines, light_to_temperature);
-        read_until_empty!(lines, temperature_to_humidity);
-        read_until_empty!(lines, humidity_to_location);
+        let mut mappings = Vec::new();
+        let mut current_group = Vec::new();
+        for line in lines {
+            if line.trim().is_empty() {
+                mappings.push(current_group);
+                current_group = Vec::new();
+                continue;
+            }
 
-        Ok(Almanac {
-            seeds,
-            seed_ranges,
-            seed_to_soil,
-            soil_to_fertilizer,
-            fertilizer_to_water,
-            water_to_light,
-            light_to_temperature,
-            temperature_to_humidity,
-            humidity_to_location,
-        })
+            let mut parts = line.split(' ').filter_map(|s| s.parse::<u64>().ok()).take(3);
+            if let (Some(dest), Some(src), Some(length)) =
+                (parts.next(), parts.next(), parts.next())
+            {
+                current_group.push(Range { dest, src, length });
+            }
+        }
+        mappings.push(current_group);
+
+        Ok(Almanac { seeds, seed_ranges, mappings })
     }
 }
 
 impl Almanac {
     fn map_seed(&self, seed: u64) -> u64 {
-        let soil = self.seed_to_soil.iter().find_map(|r| r.map(seed)).unwrap_or(seed);
-        let fertilizer = self.soil_to_fertilizer.iter().find_map(|r| r.map(soil)).unwrap_or(soil);
-        let water =
-            self.fertilizer_to_water.iter().find_map(|r| r.map(fertilizer)).unwrap_or(fertilizer);
-        let light = self.water_to_light.iter().find_map(|r| r.map(water)).unwrap_or(water);
-        let temperature =
-            self.light_to_temperature.iter().find_map(|r| r.map(light)).unwrap_or(light);
-        let humidity = self
-            .temperature_to_humidity
+        self.mappings
             .iter()
-            .find_map(|r| r.map(temperature))
-            .unwrap_or(temperature);
-        self.humidity_to_location.iter().find_map(|r| r.map(humidity)).unwrap_or(humidity)
+            .fold(seed, |seed, group| group.iter().find_map(|r| r.map(seed)).unwrap_or(seed))
     }
 
     fn lowest_location(&self) -> u64 {
@@ -272,8 +237,8 @@ impl Almanac {
     fn lowest_location_range(&self) -> u64 {
         self.seed_ranges
             .par_iter()
-            .map(|&(s, l)| {
-                (s..=l).into_par_iter().map(|s| self.map_seed(s)).min().unwrap_or(u64::MAX)
+            .map(|&(s, e)| {
+                (s..=e).into_par_iter().map(|s| self.map_seed(s)).min().unwrap_or(u64::MAX)
             })
             .min()
             .unwrap_or(0)
@@ -384,6 +349,6 @@ mod tests {
     #[test]
     fn test_part2_real_input() {
         let problem = Day05 {};
-        assert_eq!(problem.solve_part2(), Solution::Todo);
+        assert_eq!(problem.solve_part2(), Solution::U64(12634632));
     }
 }
