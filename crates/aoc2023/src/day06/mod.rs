@@ -133,46 +133,20 @@ impl Race {
         Self { time, distance }
     }
 
-    fn minimum_winning_time(&self) -> u64 {
-        // Binary search for the lowest charge time that still allows beating
-        // the record.
-        let mut min = 0;
-        let mut max = self.time;
-        while min < max {
-            let mid = (min + max) / 2;
-            let charge_time = mid;
-            let runtime = self.time - charge_time;
-            let distance = charge_time * runtime;
-            if distance > self.distance {
-                max = mid;
-            } else {
-                min = mid + 1;
-            }
-        }
-        min
-    }
+    fn roots(&self) -> (u64, u64) {
+        let a = 1f64;
+        let b = -(self.time as f64);
+        let c = self.distance as f64;
 
-    fn maximum_winning_time(&self) -> u64 {
-        // Binary search for the highest charge time that still allows beating
-        // the record.
-        let mut min = 0;
-        let mut max = self.time;
-        while min < max {
-            let mid = (min + max + 1) / 2;
-            let charge_time = mid;
-            let runtime = self.time - charge_time;
-            let distance = charge_time * runtime;
-            if distance > self.distance {
-                min = mid;
-            } else {
-                max = mid - 1;
-            }
-        }
-        max
+        let root = (b * b - 4f64 * a * c).sqrt();
+        let denominator = 2f64 * a;
+
+        (((-b + root) / denominator).ceil() as u64, ((-b - root) / denominator).floor() as u64)
     }
 
     fn winning_options(&self) -> u64 {
-        self.maximum_winning_time() - self.minimum_winning_time() + 1
+        let (a, b) = self.roots();
+        a.max(b) - a.min(b) - 1
     }
 }
 
