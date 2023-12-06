@@ -132,17 +132,47 @@ impl Race {
     fn new(time: u64, distance: u64) -> Self {
         Self { time, distance }
     }
-    fn winning_options(&self) -> u64 {
-        let mut options = 0;
-        for i in 0..self.time {
-            let charge_time = i;
+
+    fn minimum_winning_time(&self) -> u64 {
+        // Binary search for the lowest charge time that still allows beating
+        // the record.
+        let mut min = 0;
+        let mut max = self.time;
+        while min < max {
+            let mid = (min + max) / 2;
+            let charge_time = mid;
             let runtime = self.time - charge_time;
             let distance = charge_time * runtime;
             if distance > self.distance {
-                options += 1;
+                max = mid;
+            } else {
+                min = mid + 1;
             }
         }
-        options
+        min
+    }
+
+    fn maximum_winning_time(&self) -> u64 {
+        // Binary search for the highest charge time that still allows beating
+        // the record.
+        let mut min = 0;
+        let mut max = self.time;
+        while min < max {
+            let mid = (min + max + 1) / 2;
+            let charge_time = mid;
+            let runtime = self.time - charge_time;
+            let distance = charge_time * runtime;
+            if distance > self.distance {
+                min = mid;
+            } else {
+                max = mid - 1;
+            }
+        }
+        max
+    }
+
+    fn winning_options(&self) -> u64 {
+        self.maximum_winning_time() - self.minimum_winning_time() + 1
     }
 }
 
@@ -228,6 +258,6 @@ mod tests {
     #[test]
     fn test_part2_real_input() {
         let problem = Day06 {};
-        assert_eq!(problem.solve_part2(), Solution::Todo);
+        assert_eq!(problem.solve_part2(), Solution::U64(42250895));
     }
 }
