@@ -34,14 +34,14 @@ fn main() {
                 "{} - Part 1: {:?} ({} runs)",
                 problem.name(),
                 bench.average(),
-                bench.results.len()
+                bench.actual_size
             );
             let bench = problem.bench_part2();
             println!(
                 "{} - Part 2: {:?} ({} runs)",
                 problem.name(),
                 bench.average(),
-                bench.results.len()
+                bench.actual_size
             );
         }
     } else if args.contains(&"bench-md".to_string()) {

@@ -1,6 +1,6 @@
 # Advent of Code 2023
 
-Generated on Wed, 06 Dec 2023 15:15:15 +0000
+Generated on Wed, 06 Dec 2023 16:55:11 +0000
 
 ## Specifications
 
@@ -10,13 +10,13 @@ Generated on Wed, 06 Dec 2023 15:15:15 +0000
 
 ## Results
 
-| Problem | Part 1 Time | Part 2 Time | Runs |
-| ------- | ----------- | ----------- | ---- |
-| Day 1: Trebuchet?! | 40.7µs ± 12.4µs | 194.9µs ± 12µs | 500 |
-| Day 1: Trebuchet?! (Alt) | 31.3µs ± 808ns | 197.1µs ± 1.5µs | 500 |
-| Day 2: Cube Conundrum | 23.3µs ± 818ns | 31.4µs ± 840ns | 500 |
-| Day 3: Gear Ratios | 115.4µs ± 21.3µs | 103.9µs ± 1.1µs | 500 |
-| Day 4: Scratchcards | 61.5µs ± 1.8µs | 62.7µs ± 648ns | 500 |
-| Day 5: If You Give A Seed A Fertilizer | 13.1µs ± 1.2µs | 30.8µs ± 1.3µs | 500 |
-| Day 6: Wait For It | 183ns ± 36ns | 409ns ± 62ns | 500 |
+| Problem | Part 1 Time | Part 2 Time | Part 1 Runs | Part 2 Runs |
+| ------- | ----------- | ----------- | ----------- | ----------- |
+| Day 1: Trebuchet?! | 42.3µs ± 11µs | 200.6µs ± 10.3µs | 9938 | 4804 |
+| Day 1: Trebuchet?! (Alt) | 30.5µs ± 933ns | 207µs ± 7µs | 10000 | 4901 |
+| Day 2: Cube Conundrum | 23µs ± 457ns | 34µs ± 937ns | 10000 | 10000 |
+| Day 3: Gear Ratios | 111.6µs ± 8.2µs | 107.4µs ± 2.1µs | 8190 | 9610 |
+| Day 4: Scratchcards | 64.2µs ± 4.1µs | 62.9µs ± 708ns | 10000 | 10000 |
+| Day 5: If You Give A Seed A Fertilizer | 13.3µs ± 256ns | 31.1µs ± 509ns | 10000 | 10000 |
+| Day 6: Wait For It | 178ns ± 6ns | 433ns ± 28ns | 10000 | 10000 |
 
