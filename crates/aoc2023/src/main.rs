@@ -9,6 +9,7 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
 use day01::*;
 use day01alt::*;
 use day02::*;
@@ -16,6 +17,7 @@ use day03::*;
 use day04::*;
 use day05::*;
 use day06::*;
+use day07::*;
 fn main() {
     let args = std::env::args().collect::<Vec<_>>();
     let problems: Vec<Box<dyn Problem>> = vec![
@@ -26,6 +28,7 @@ fn main() {
         Box::new(Day04),
         Box::new(Day05),
         Box::new(Day06),
+        Box::new(Day07),
     ];
     if args.contains(&"bench".to_string()) {
         for problem in problems {
@@ -34,14 +37,14 @@ fn main() {
                 "{} - Part 1: {:?} ({} runs)",
                 problem.name(),
                 bench.average(),
-                bench.actual_size
+                bench.results.len()
             );
             let bench = problem.bench_part2();
             println!(
                 "{} - Part 2: {:?} ({} runs)",
                 problem.name(),
                 bench.average(),
-                bench.actual_size
+                bench.results.len()
             );
         }
     } else if args.contains(&"bench-md".to_string()) {
