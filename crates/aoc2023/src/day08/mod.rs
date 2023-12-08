@@ -189,6 +189,17 @@ const fn hash(c: &[char]) -> u16 {
     as_num(c[0]) << 10 | as_num(c[1]) << 5 | as_num(c[2])
 }
 
+fn hash_str(s: &str) -> u16 {
+    let mut chars = s.chars();
+    if let (Some(a), Some(b), Some(c), None) =
+        (chars.next(), chars.next(), chars.next(), chars.next())
+    {
+        hash(&[a, b, c])
+    } else {
+        panic!("Invalid hash string: {}", s);
+    }
+}
+
 static PART_1_GOAL: u16 = hash(&['Z', 'Z', 'Z']);
 
 impl Network {
@@ -284,11 +295,8 @@ impl Day08 {
             let (value, children) = line;
             let (left, right) = children.split_once(", ").expect("Expected two children for node");
             nodes.insert(
-                hash(&value.chars().collect::<Vec<_>>()),
-                Node {
-                    left: hash(&left[1..].chars().collect::<Vec<_>>()),
-                    right: hash(&right[..right.len() - 1].chars().collect::<Vec<_>>()),
-                },
+                hash_str(value),
+                Node { left: hash_str(&left[1..]), right: hash_str(&right[..right.len() - 1]) },
             );
         }
         (moves, Network { nodes })
