@@ -125,24 +125,22 @@ enum Move {
     Right,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 struct Node {
-    left: String,
-    right: String,
+    left: u16,
+    right: u16,
 }
 
 #[derive(Debug, Clone)]
 struct Network {
-    nodes: HashMap<String, Node>,
+    nodes: HashMap<u16, Node>,
 }
 
 const fn gcd(a: u64, b: u64) -> u64 {
     let mut a = a;
     let mut b = b;
     while b != 0 {
-        let t = b;
-        b = a % b;
-        a = t;
+        (b, a) = (a % b, b);
     }
     a
 }
@@ -151,24 +149,66 @@ const fn lcm(a: u64, b: u64) -> u64 {
     a * b / gcd(a, b)
 }
 
+const fn as_num(c: char) -> u16 {
+    match c {
+        'A' => 0,
+        'B' => 1,
+        'C' => 2,
+        'D' => 3,
+        'E' => 4,
+        'F' => 5,
+        'G' => 6,
+        'H' => 7,
+        'I' => 8,
+        'J' => 9,
+        'K' => 10,
+        'L' => 11,
+        'M' => 12,
+        'N' => 13,
+        'O' => 14,
+        'P' => 15,
+        'Q' => 16,
+        'R' => 17,
+        'S' => 18,
+        'T' => 19,
+        'U' => 20,
+        'V' => 21,
+        'W' => 22,
+        'X' => 23,
+        'Y' => 24,
+        'Z' => 25,
+        '1' => 26,
+        '2' => 27,
+        _ => unimplemented!(),
+    }
+}
+
+const fn hash(c: &[char]) -> u16 {
+    // Since we have <= 32 options for characters, we only need 5 bits per
+    // character, so each entry can be a u16 instead.
+    as_num(c[0]) << 10 | as_num(c[1]) << 5 | as_num(c[2])
+}
+
+static PART_1_GOAL: u16 = hash(&['Z', 'Z', 'Z']);
+
 impl Network {
-    fn traverse(&self, moves: &[Move]) -> u64 {
+    fn traverse(&self, moves: &[Move]) -> u16 {
         let mut total_steps = 0;
-        let mut current = "AAA".to_string();
+        let mut current = 0;
         let mut i: usize = 0;
         loop {
             let current_move = moves[i];
             let node = self.nodes.get(&current).expect("Invalid node");
             current = match current_move {
-                Move::Left => node.left.clone(),
-                Move::Right => node.right.clone(),
+                Move::Left => node.left,
+                Move::Right => node.right,
             };
             total_steps += 1;
             i += 1;
             if i >= moves.len() {
                 i = 0;
             }
-            if current == "ZZZ" {
+            if current == PART_1_GOAL {
                 break;
             }
         }
@@ -177,8 +217,9 @@ impl Network {
 
     fn ghost_traverse(&self, moves: &[Move]) -> u64 {
         let mut total_steps = 0;
-        let mut current = self.nodes.keys().filter(|n| n.ends_with('A')).collect::<Vec<_>>();
-        let mut last_match: Vec<Option<&str>> = vec![None; current.len()];
+        // Ends with A means the last 5 bits are zero.
+        let mut current = self.nodes.keys().filter(|n| *n & 0b11111 == 0).collect::<Vec<_>>();
+        let mut last_match: Vec<Option<&u16>> = vec![None; current.len()];
         let mut last_cycle_count = vec![0; current.len()];
         let mut i: usize = 0;
 
@@ -194,7 +235,7 @@ impl Network {
                     Move::Right => &node.right,
                 };
                 next.push(next_node);
-                if next_node.ends_with('Z') && last_match[idx].is_none() {
+                if (next_node & as_num('Z') == as_num('Z')) && last_match[idx].is_none() {
                     last_match[idx] = Some(next_node);
                     last_cycle_count[idx] = total_steps;
                 }
@@ -236,8 +277,11 @@ impl Day08 {
             let (value, children) = line;
             let (left, right) = children.split_once(", ").expect("Expected two children for node");
             nodes.insert(
-                value.to_string(),
-                Node { left: left[1..].to_string(), right: right[..right.len() - 1].to_string() },
+                hash(&value.chars().collect::<Vec<_>>()),
+                Node {
+                    left: hash(&left[1..].chars().collect::<Vec<_>>()),
+                    right: hash(&right[..right.len() - 1].chars().collect::<Vec<_>>()),
+                },
             );
         }
         (moves, Network { nodes })
@@ -256,7 +300,7 @@ impl Problem for Day08 {
     }
     fn solve_part1_with(&self, input: &str) -> Solution {
         let (moves, network) = self.parse(input);
-        Solution::U64(network.traverse(&moves))
+        Solution::U16(network.traverse(&moves))
     }
     fn solve_part2_with(&self, input: &str) -> Solution {
         let (moves, network) = self.parse(input);
@@ -279,18 +323,18 @@ mod tests {
             GGG = (GGG, GGG)
             ZZZ = (ZZZ, ZZZ)";
         let problem = Day08 {};
-        assert_eq!(problem.solve_part1_with(input), Solution::U64(2));
+        assert_eq!(problem.solve_part1_with(input), Solution::U16(2));
         let input2 = "LLR
 
             AAA = (BBB, BBB)
             BBB = (AAA, ZZZ)
             ZZZ = (ZZZ, ZZZ)";
-        assert_eq!(problem.solve_part1_with(input2), Solution::U64(6));
+        assert_eq!(problem.solve_part1_with(input2), Solution::U16(6));
     }
     #[test]
     fn test_part1_real_input() {
         let problem = Day08 {};
-        assert_eq!(problem.solve_part1(), Solution::U64(18827));
+        assert_eq!(problem.solve_part1(), Solution::U16(18827));
     }
     #[test]
     fn test_part2_example() {
