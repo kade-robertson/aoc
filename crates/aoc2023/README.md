@@ -1,6 +1,6 @@
 # Advent of Code 2023
 
-Generated on Fri, 08 Dec 2023 15:24:43 +0000
+Generated on Fri, 08 Dec 2023 15:43:46 +0000
 
 ## Specifications
 
@@ -12,13 +12,13 @@ Generated on Fri, 08 Dec 2023 15:24:43 +0000
 
 | Problem | Part 1 Time | Part 2 Time | Part 1 Runs | Part 2 Runs |
 | ------- | ----------- | ----------- | ----------- | ----------- |
-| Day 1: Trebuchet?! | 41.9µs ± 1.8µs | 197.5µs ± 3.8µs | 10000 | 4841 |
-| Day 1: Trebuchet?! (Alt) | 30.4µs ± 989ns | 203.7µs ± 10.8µs | 10000 | 5042 |
-| Day 2: Cube Conundrum | 22.7µs ± 634ns | 32.6µs ± 729ns | 10000 | 10000 |
-| Day 3: Gear Ratios | 111.8µs ± 2.6µs | 107.7µs ± 1.9µs | 8387 | 9295 |
-| Day 4: Scratchcards | 65.7µs ± 1.2µs | 65.8µs ± 1.1µs | 10000 | 10000 |
-| Day 5: If You Give A Seed A Fertilizer | 14.8µs ± 480ns | 32.5µs ± 4.5µs | 10000 | 10000 |
-| Day 6: Wait For It | 198ns ± 34ns | 442ns ± 38ns | 10000 | 10000 |
-| Day 7: Camel Cards | 157.3µs ± 7µs | 150.7µs ± 4.2µs | 6261 | 6304 |
-| Day 8: Haunted Wasteland | 236.9µs ± 4µs | 1ms ± 22.2µs | 4206 | 966 |
+| Day 1: Trebuchet?! | 42µs ± 8.1µs | 195.7µs ± 6.7µs | 10000 | 4877 |
+| Day 1: Trebuchet?! (Alt) | 30µs ± 971ns | 194.9µs ± 2.9µs | 10000 | 5150 |
+| Day 2: Cube Conundrum | 22µs ± 963ns | 34.9µs ± 4.5µs | 10000 | 10000 |
+| Day 3: Gear Ratios | 108.3µs ± 3µs | 105.6µs ± 1.7µs | 8426 | 9430 |
+| Day 4: Scratchcards | 73.2µs ± 1.1µs | 72.5µs ± 1.3µs | 10000 | 10000 |
+| Day 5: If You Give A Seed A Fertilizer | 14.6µs ± 1.1µs | 32µs ± 714ns | 10000 | 10000 |
+| Day 6: Wait For It | 189ns ± 6ns | 417ns ± 22ns | 10000 | 10000 |
+| Day 7: Camel Cards | 154.6µs ± 1.4µs | 155.6µs ± 1.8µs | 6375 | 6269 |
+| Day 8: Haunted Wasteland | 165.6µs ± 2.8µs | 560.6µs ± 2.6µs | 6035 | 1791 |
 

@@ -30,4 +30,4 @@ build:
 	cargo build --release
 
 build-native:
-	RUSTFLAGS="-C target-cpu=native" cargo build --release
+	RUSTFLAGS="-C target-cpu=native" cargo build --profile release-profile

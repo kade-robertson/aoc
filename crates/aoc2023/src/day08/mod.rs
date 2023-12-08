@@ -1,5 +1,5 @@
 use common::{Problem, Solution};
-use std::collections::HashMap;
+use rustc_hash::FxHashMap;
 /// \--- Day 8: Haunted Wasteland ---
 /// ----------
 ///
@@ -133,7 +133,7 @@ struct Node {
 
 #[derive(Debug, Clone)]
 struct Network {
-    nodes: HashMap<u16, Node>,
+    nodes: FxHashMap<u16, Node>,
 }
 
 const fn gcd(a: u64, b: u64) -> u64 {
@@ -290,7 +290,7 @@ impl Day08 {
             })
             .collect::<Vec<_>>();
         let _ = lines.next();
-        let mut nodes = HashMap::new();
+        let mut nodes = FxHashMap::default();
         while let Some(line) = lines.next().and_then(|l| l.split_once(" = ")) {
             let (value, children) = line;
             let (left, right) = children.split_once(", ").expect("Expected two children for node");
