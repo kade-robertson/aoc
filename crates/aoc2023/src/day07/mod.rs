@@ -240,18 +240,18 @@ fn compare(
     cards2: [Card; 5],
     type2: HandType,
 ) -> std::cmp::Ordering {
-    match type1.cmp(&type2) {
-        std::cmp::Ordering::Equal => {
-            for i in 0..5 {
-                match cards1[i].cmp(&cards2[i]) {
-                    std::cmp::Ordering::Equal => {}
-                    o => return o,
-                }
-            }
-            std::cmp::Ordering::Equal
-        }
-        o => o,
+    let type_cmp = type1.cmp(&type2);
+    if type_cmp != std::cmp::Ordering::Equal {
+        return type_cmp;
     }
+
+    for i in 0..5 {
+        match cards1[i].cmp(&cards2[i]) {
+            std::cmp::Ordering::Equal => {}
+            o => return o,
+        }
+    }
+    std::cmp::Ordering::Equal
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -369,7 +369,7 @@ impl Day07 {
                 } else {
                     CamelHand::Hand(Hand::new(cards))
                 };
-                let bet = bet.parse::<u64>().unwrap();
+                let bet = bet.parse::<u64>().unwrap_or_default();
                 (hand, bet)
             })
             .collect()
