@@ -217,32 +217,39 @@ impl Network {
 
     fn ghost_traverse(&self, moves: &[Move]) -> u64 {
         let mut total_steps = 0;
-        // Ends with A means the last 5 bits are zero.
-        let mut current = self.nodes.keys().filter(|n| *n & 0b11111 == 0).collect::<Vec<_>>();
-        let mut last_match: Vec<Option<&u16>> = vec![None; current.len()];
-        let mut last_cycle_count = vec![0; current.len()];
+        let mut current: [Option<u16>; 16] = [None; 16];
+        let mut required_matches = 0;
+        for (i, k) in self.nodes.keys().filter(|n| *n & 0b11111 == 0).enumerate() {
+            current[i] = Some(*k);
+            required_matches += 1;
+        }
+        let mut last_match: [Option<u16>; 16] = [None; 16];
+        let mut last_cycle_count = [0; 16];
         let mut i: usize = 0;
 
         loop {
             total_steps += 1;
             let current_move = moves[i];
 
-            let mut next = vec![];
-            for (idx, current_node) in current.iter().enumerate() {
-                let node = self.nodes.get(*current_node).expect("Invalid node");
+            let mut next = [None; 16];
+            for (idx, current_node) in
+                current.iter().enumerate().filter_map(|(idx, &n)| n.map(|n| (idx, n)))
+            {
+                let node = self.nodes.get(&current_node).expect("Invalid node");
                 let next_node = match current_move {
                     Move::Left => &node.left,
                     Move::Right => &node.right,
                 };
-                next.push(next_node);
+                next[idx] = Some(*next_node);
                 if (next_node & as_num('Z') == as_num('Z')) && last_match[idx].is_none() {
-                    last_match[idx] = Some(next_node);
+                    last_match[idx] = Some(*next_node);
                     last_cycle_count[idx] = total_steps;
                 }
             }
 
-            if last_match.iter().all(|&b| b.is_some()) {
-                let all_lcm = last_cycle_count.iter().fold(1, |acc, &n| lcm(acc, n));
+            if last_match.iter().take(required_matches).all(|&b| b.is_some()) {
+                let all_lcm =
+                    last_cycle_count.iter().take(required_matches).fold(1, |acc, &n| lcm(acc, n));
                 total_steps = all_lcm;
                 break;
             }
